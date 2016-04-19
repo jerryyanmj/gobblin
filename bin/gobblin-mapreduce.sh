@@ -134,6 +134,7 @@ LIBJARS=(
   $FWDIR_LIB/gobblin-core-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/gobblin-api-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/gobblin-utility-$GOBBLIN_VERSION.jar
+  $FWDIR_LIB/gobblin-example-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/guava-15.0.jar
   $FWDIR_LIB/avro-1.7.7.jar
   $FWDIR_LIB/avro-mapred-1.7.7-hadoop2.jar
@@ -148,6 +149,15 @@ LIBJARS=(
   $FWDIR_LIB/metrics-core-3.1.0.jar
   $FWDIR_LIB/metrics-graphite-3.1.0.jar
   $FWDIR_LIB/scala-library-2.11.8.jar
+  $FWDIR_LIB/jackson-annotations-2.2.2.jar
+  $FWDIR_LIB/jackson-core-2.2.2.jar
+  $FWDIR_LIB/jackson-core-asl-1.9.13.jar
+  $FWDIR_LIB/jackson-databind-2.2.2.jar
+  $FWDIR_LIB/jackson-jaxrs-1.7.1.jar
+  $FWDIR_LIB/jackson-mapper-asl-1.9.13.jar
+  $FWDIR_LIB/jackson-xc-1.7.1.jar
+  $FWDIR_LIB/snappy-0.3.jar
+  $FWDIR_LIB/snappy-java-1.1.1.6.jar
 )
 LIBJARS=$(join , "${LIBJARS[@]}")
 
@@ -175,6 +185,7 @@ $HADOOP_BIN_DIR/hadoop jar \
         gobblin.runtime.mapreduce.CliMRJobLauncher \
         -D mapreduce.user.classpath.first=true \
         -D mapreduce.job.user.classpath.first=true \
+        -D mapreduce.task.classpath.user.precedence=true \
         $JT_COMMAND \
         $FS_COMMAND \
         -libjars $LIBJARS \
