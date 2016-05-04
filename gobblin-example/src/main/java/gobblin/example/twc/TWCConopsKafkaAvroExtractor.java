@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,17 +29,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TWCConopsKafkaAvroExtractor extends KafkaAvroExtractor<String> {
 
-    private final static String SCHEMA_REPO_BASE_URL_KEY = "schema.repo.base.url";
-    protected final static String DEFAULT_SCHEMA_REPO_BASE_URL = "http://haproxy.escher-twc.com:83/EG/";
-    private final static String SCHEMA_REPO_SCHEMA_EXTENSION_KEY = "schema.extension";
-    protected final static String DEFAULT_SCHEMA_EXTENSION = "avro";
-    private final Logger log = LoggerFactory.getLogger(TWCConopsKafkaAvroExtractor.class);
+    private static final String SCHEMA_REPO_BASE_URL_KEY = "schema.repo.base.url";
+    protected static final String DEFAULT_SCHEMA_REPO_BASE_URL = "http://haproxy.escher-twc.com:83/EG/";
+    private static final String SCHEMA_REPO_SCHEMA_EXTENSION_KEY = "schema.extension";
+    protected static final String DEFAULT_SCHEMA_EXTENSION = "avro";
+    private static final Logger log = LoggerFactory.getLogger(TWCConopsKafkaAvroExtractor.class);
+    private static Map<String, String> defaultSchema;
 
     protected Map<String, Schema> schemaCache;
     protected String schemaRepoUrl;
     protected String schemaExt;
-    protected String defaultClassPathSchema;
 
+
+    static {
+        defaultSchema = new HashMap<String, String>(2);
+        defaultSchema.put("prod-eg_v3_2-big_data", "egw_v3.avsc");
+        defaultSchema.put("eg-v4-bigdata-avro", "egw_v4_schema_1.avsc");
+    }
 
     public TWCConopsKafkaAvroExtractor(WorkUnitState state) {
         super(state);
@@ -50,7 +57,9 @@ public class TWCConopsKafkaAvroExtractor extends KafkaAvroExtractor<String> {
 
     @Override
     protected Optional<Schema> getExtractorSchema() {
-        InputStream defaultSchema = this.getClass().getClassLoader().getResourceAsStream("default.avsc");
+        String filePath = defaultSchema.get(this.topicName);
+        InputStream defaultSchema = this.getClass().getClassLoader().getResourceAsStream(filePath);
+        log.info(" >>>>>>>>>>>>>>>>>>>>>>> {}, {}", filePath, this.topicName);
         Schema schema = null;
         try {
             schema = new Schema.Parser().parse(defaultSchema);
