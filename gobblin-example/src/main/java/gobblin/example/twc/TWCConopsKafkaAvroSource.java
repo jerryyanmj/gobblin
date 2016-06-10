@@ -13,7 +13,6 @@
 package gobblin.example.twc;
 
 import gobblin.configuration.WorkUnitState;
-import gobblin.example.twc.TWCConopsKafkaAvroExtractor;
 import gobblin.source.extractor.Extractor;
 import gobblin.source.extractor.extract.kafka.KafkaSource;
 import org.apache.avro.Schema;

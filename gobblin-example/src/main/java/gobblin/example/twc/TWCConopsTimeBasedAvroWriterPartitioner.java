@@ -84,9 +84,9 @@ public class TWCConopsTimeBasedAvroWriterPartitioner implements WriterPartitione
 
     public TWCConopsTimeBasedAvroWriterPartitioner(State state, int numBranches, int branchId) {
         this.granularity = EgwPartitionSchema.valueOf(state.getProperties().getProperty(TWC_BASED_AVRO_WRITER_PARTITION_GRANULARITY_KEY, TWC_BASED_AVRO_WRITER_DEFAULT_PARTITION_GRANULARITY));
-        log.debug("Granularity is {} and partition schema is {}", this.granularity.name, this.granularity.partitionSchema);
         this.granularityStep = Long.parseLong(state.getProperties().getProperty(TWC_BASED_AVRO_WRITER_PARTITION_GRANULARITY_STEP_KEY, TWC_BASED_AVRO_WRITER_DEFAULT_PARTITION_GRANULARITY_STEP));
         this.timestampField = state.getProperties().getProperty(TWC_BASED_AVRO_WRITER_TIMESTAMP_FIELD_KEY, TWC_BASED_AVRO_WRITER_DEFAULT_TIMESTAMP_FIELD);
+        log.debug("TWCConopsTimeBasedAvroWriterPartitioner is initialized with partition schema is {}", this.granularity.partitionSchema);
     }
 
     @Override

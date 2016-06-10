@@ -1,25 +1,17 @@
 package gobblin.example.twc;
 
-import com.google.common.base.Optional;
 import gobblin.configuration.WorkUnitState;
 import gobblin.source.extractor.Extractor;
 import gobblin.source.extractor.extract.kafka.KafkaAvroExtractor;
-import kafka.message.MessageAndOffset;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,49 +21,40 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TWCConopsKafkaAvroExtractor extends KafkaAvroExtractor<String> {
 
-    private static final String SCHEMA_REPO_BASE_URL_KEY = "schema.repo.base.url";
-    protected static final String DEFAULT_SCHEMA_REPO_BASE_URL = "http://haproxy.escher-twc.com:83/EG/";
-    private static final String SCHEMA_REPO_SCHEMA_EXTENSION_KEY = "schema.extension";
+    public static final String SCHEMA_REPO_SCHEMA_EXTENSION_KEY = "schema.extension";
+
     protected static final String DEFAULT_SCHEMA_EXTENSION = "avro";
+
     private static final Logger log = LoggerFactory.getLogger(TWCConopsKafkaAvroExtractor.class);
-    private static Map<String, String> defaultSchema;
 
     protected Map<String, Schema> schemaCache;
+    protected Map<String, String> schemaRepoUrlMap;
     protected String schemaRepoUrl;
     protected String schemaExt;
-
-
-    static {
-        defaultSchema = new HashMap<String, String>(2);
-        defaultSchema.put("prod-eg_v3_2-big_data", "egw_v3.avsc");
-        defaultSchema.put("eg-v4-bigdata-avro", "egw_v4_schema_1.avsc");
-    }
 
     public TWCConopsKafkaAvroExtractor(WorkUnitState state) {
         super(state);
         log.info("Load TWCConopsKafkaAvroExtractor Properties.");
-        this.schemaRepoUrl = state.getProperties().getProperty(SCHEMA_REPO_BASE_URL_KEY, DEFAULT_SCHEMA_REPO_BASE_URL);
-        this.schemaExt = state.getProperties().getProperty(SCHEMA_REPO_SCHEMA_EXTENSION_KEY, DEFAULT_SCHEMA_EXTENSION);
+        this.schemaRepoUrlMap = new ConcurrentHashMap<String, String>();
         this.schemaCache = new ConcurrentHashMap<String, Schema>();
-    }
 
-    @Override
-    protected Optional<Schema> getExtractorSchema() {
-        String filePath = defaultSchema.get(this.topicName);
-        InputStream defaultSchema = this.getClass().getClassLoader().getResourceAsStream(filePath);
-        log.info(" >>>>>>>>>>>>>>>>>>>>>>> {}, {}", filePath, this.topicName);
-        Schema schema = null;
-        try {
-            schema = new Schema.Parser().parse(defaultSchema);
-        } catch (IOException e) {
-            log.error("Invalid schema file");
+        String str = state.getProperties().getProperty(TWCConopsKafkaSchemaRegistry.SCHEMA_REPO_BASE_URL_KEY, StringUtils.EMPTY);
+        if (StringUtils.isNotEmpty(str)) {
+            String[] pairs = StringUtils.split(str, ";");
+            for (String pair : pairs) {
+                String[] kv = StringUtils.split(pair, "|");
+                if (ArrayUtils.getLength(kv) == 2) {
+                    this.schemaRepoUrlMap.put(kv[0], kv[1]);
+                }
+            }
         }
-        return Optional.fromNullable(schema);
+
+        this.schemaRepoUrl = schemaRepoUrlMap.getOrDefault(this.topicName, TWCConopsKafkaSchemaRegistry.DEFAULT_SCHEMA_REPO_BASE_URL);
+        this.schemaExt = state.getProperties().getProperty(SCHEMA_REPO_SCHEMA_EXTENSION_KEY, DEFAULT_SCHEMA_EXTENSION);
     }
 
     @Override
-    protected GenericRecord decodeRecord(MessageAndOffset messageAndOffset) throws IOException {
-        byte[] payload = getBytes(messageAndOffset.message().payload());
+    protected Schema getRecordSchema(byte[] payload) {
         ByteBuffer buffer = ByteBuffer.wrap(payload);
         String schemaId = String.valueOf(buffer.getInt());
 
@@ -79,90 +62,17 @@ public class TWCConopsKafkaAvroExtractor extends KafkaAvroExtractor<String> {
         Schema recordSchema = schemaCache.get(schemaId);
 
         if (recordSchema == null) {
-            recordSchema = getSchemaByIdFromRepo(schemaId);
+            recordSchema = TWCConopsKafkaSchemaUtil.getSchemaByURL(this.schemaRepoUrl + "schema_" + schemaId + "." + schemaExt);
             schemaCache.put(schemaId, recordSchema);
         }
 
-
-        Decoder decoder = DecoderFactory.get().binaryDecoder(buffer.array(), buffer.position() + buffer.arrayOffset(), buffer.limit(), null);
-        this.reader.get().setExpected(recordSchema);
-        this.reader.get().setSchema(recordSchema);
-        try {
-            GenericRecord record = this.reader.get().read(null, decoder);
-            return record;
-        } catch (IOException e) {
-            log.error(String.format("Error during decoding record for partition %s: ", this.getCurrentPartition()));
-            throw e;
-        }
+        return recordSchema;
     }
 
     @Override
-    protected Schema getRecordSchema(byte[] payload) { return null;}
-
-    @Override
-    protected Decoder getDecoder(byte[] payload) { return null; }
-
-    private Schema getSchemaByIdFromRepo(String schemaId) {
-        String schemaRepoURL = schemaRepoUrl + "schema_" + schemaId + "." + schemaExt;
-
-        log.info("Schema is empty, getting it from repo using URL - {}", schemaRepoURL);
-
-        try {
-            HostnameVerifier hv = new HostnameVerifier() {
-                public boolean verify(String urlHostName, SSLSession session) {
-                    log.warn("Warning: URL Host: {} vs. {}", urlHostName, session.getPeerHost());
-                    return true;
-                }
-            };
-
-            trustAllHttpsCertificates();
-            HttpsURLConnection.setDefaultHostnameVerifier(hv);
-
-            Schema schema = new Schema.Parser().parse(new URL(schemaRepoURL).openStream());
-            return schema;
-        } catch (Exception ex) {
-            log.error("Failed to obtain schema from the URL {}", schemaRepoURL);
-        }
-
-        return null;
-    }
-
-    private static void trustAllHttpsCertificates() throws Exception {
-        javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[1];
-        javax.net.ssl.TrustManager tm = new miTM();
-        trustAllCerts[0] = tm;
-        javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext
-                .getInstance("SSL");
-        sc.init(null, trustAllCerts, null);
-        javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc
-                .getSocketFactory());
-    }
-
-    static class miTM implements javax.net.ssl.TrustManager, javax.net.ssl.X509TrustManager {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        public boolean isServerTrusted(
-                java.security.cert.X509Certificate[] certs) {
-            return true;
-        }
-
-        public boolean isClientTrusted(
-                java.security.cert.X509Certificate[] certs) {
-            return true;
-        }
-
-        public void checkServerTrusted(
-                java.security.cert.X509Certificate[] certs, String authType)
-                throws java.security.cert.CertificateException {
-            return;
-        }
-
-        public void checkClientTrusted(
-                java.security.cert.X509Certificate[] certs, String authType)
-                throws java.security.cert.CertificateException {
-            return;
-        }
+    protected Decoder getDecoder(byte[] payload) {
+        ByteBuffer buffer = ByteBuffer.wrap(payload);
+        buffer.getInt();
+        return DecoderFactory.get().binaryDecoder(buffer.array(), buffer.position() + buffer.arrayOffset(), buffer.limit(), null);
     }
 }
