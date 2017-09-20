@@ -153,11 +153,11 @@ LIBJARS=(
   $FWDIR_LIB/jackson-core-2.2.2.jar
   $FWDIR_LIB/jackson-core-asl-1.9.13.jar
   $FWDIR_LIB/jackson-databind-2.2.2.jar
-  $FWDIR_LIB/jackson-jaxrs-1.7.1.jar
+  $FWDIR_LIB/jackson-jaxrs-1.9.13.jar
   $FWDIR_LIB/jackson-mapper-asl-1.9.13.jar
-  $FWDIR_LIB/jackson-xc-1.7.1.jar
+  $FWDIR_LIB/jackson-xc-1.9.13.jar
   $FWDIR_LIB/snappy-0.3.jar
-  $FWDIR_LIB/snappy-java-1.1.1.6.jar
+  $FWDIR_LIB/snappy-java-1.1.1.7.jar
 )
 LIBJARS=$(join , "${LIBJARS[@]}")
 
