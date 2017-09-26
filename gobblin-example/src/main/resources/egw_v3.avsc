@@ -1,0 +1,683 @@
+{"name"  : "enriched_event",
+ "type": "record",
+ "namespace" : "org.twc.eventgateway2.avro_refactored",
+ "fields": [
+  {"name": "command_data", "type":
+    {"type": "record", "name": "command_data_type", "fields": [
+      {"name": "event_type", "type" : "string"},
+      {"name": "session_data", "type": ["null",
+        {"type": "record", "name": "session_data_type", "fields": [
+          {"name": "login_action_data", "type": ["null",
+              {"type": "record", "name": "login_action_data_type", "fields": [
+                  {"name": "login_started_at_wall_timestamp",            "type": ["null", "long"], "default": null},
+                  {"name": "login_action_ended_at_wall_timestamp",       "type": ["null", "long"], "default": null},
+                  {"name": "success",                                    "type": ["null", "boolean"], "default": null}
+              ]}],
+              "default": null
+          },
+          {"name": "device_info", "type": ["null",
+              {"type": "record", "name": "device_info_type", "fields": [
+                 {"name": "cc_on",                          "type": ["null", "boolean"], "default": null},
+                 {"name": "sleeping",                       "type": ["null", "boolean"],  "default": null},
+                 {"name": "startup_type",                   "type": ["null", "string"], "default": null}
+              ]}],
+              "default": null
+           },
+           {"name": "twcinfo", "type": ["null",
+               {"type": "record", "name": "twcinfo_type", "fields": [
+                  {"name": "lineup",                        "type": ["null", "string"], "default": null},
+                  {"name": "division",                      "type": ["null", "string"], "default": null}
+               ]}],
+               "default": null
+          },
+          {"name": "fips_codes", "type": ["null",
+              {"type": "record", "name": "fips_codes", "fields": [
+                  {"name": "county",          "type": ["null", "string"], "default": null},
+                  {"name": "county_section",  "type": ["null", "string"], "default": null},
+                  {"name": "national",        "type": ["null", "string"], "default": null},
+                  {"name": "state",           "type": ["null", "string"], "default": null}
+              ]}], "default": null}
+        ]}],
+        "default": null
+      },
+      {"name": "event_metadata", "type":
+        {"type": "record", "name": "event_metadata_type", "fields": [
+          {"name": "event_name",              "type": "string"},
+          {"name": "sequence_number",         "type": "int"},
+          {"name": "path_id",                 "type": ["null", "int"], "default": null},
+          {"name": "timestamp",               "type": "long"},
+          {"name": "triggered_by",            "type": ["null",
+             {"type": "record", "name": "triggered_type", "fields": [
+             {"name": "triggered_by",           "type": ["null", "string"], "default": null},
+             {"name": "deep_link_identifier",   "type": ["null", "string"], "default": null},
+             {"name": "origin",                 "type": ["null", "string"], "default": null}
+             ]}],
+             "default": null
+          },
+          {"name": "business_operation",      "type": "string"},
+          {"name": "workflow_name",           "type": ["null", "string"], "default": null},
+          {"name": "current_workflow_step",   "type": ["null", "int"],    "default": null},
+          {"name": "total_workflow_steps",    "type": ["null", "int"],    "default": null},
+          {"name": "path", "type": ["null",
+             {"type":"array", "name":"path_type", "items":
+                {"type":"record", "name":"step", "fields": [
+                    {"name": "id",                  "type": "int"},
+                    {"name": "view_name",           "type": ["null", "string"],  "default": null},
+                    {"name": "display_type",        "type": ["null", "string"],  "default": null},
+                    {"name": "page_number",         "type": ["null", "string"],  "default": null},
+                    {"name": "view_type",           "type": "string"},
+                    {"name": "view_classification", "type": ["null", "string"],  "default": null},
+                    {"name": "business_operation",  "type": "string"},
+                    {"name": "closed_at",           "type": ["null", "string"],  "default": null},
+                    {"name": "closed_by",           "type": ["null", "string"],  "default": null},
+                    {"name": "category",            "type": ["null", "string"],  "default": null},
+                    {"name": "major_category",      "type": ["null", "boolean"], "default": null},
+                    {"name": "timestamp",           "type": "long"},
+                    {"name": "search_parameters",   "type": ["null", {"type": "map", "values": "string"}], "default": null}
+                 ]}
+              }],
+              "default": null
+           }
+        ]}
+      },
+      {"name": "content_search_data", "type": ["null",
+        {"type": "record", "name": "content_search_data_type", "fields": [
+          {"name": "search_type_data", "type": ["null",
+                  {"type": "record", "name": "search_data_type", "fields": [
+                    {"name": "search_text",              "type": ["null", "string"], "default": null},
+                    {"name": "search_parameters",        "type": ["null", {"type": "map", "values": "string"}], "default": null},
+                    {"name": "search_launched_from",     "type": ["null", "string"], "default": null},
+                    {"name": "search_type",              "type": ["null", "string"], "default": null}
+                  ]}],
+                  "default": null
+          },
+          {"name": "results_data", "type": ["null",
+                  {"type": "record", "name": "results_data_type", "fields": [
+                    {"name": "search_result_count",             "type": ["null", "int"], "default": null},
+                    {"name": "search_result_text",              "type": ["null", "string"], "default": null},
+                    {"name": "search_num_of_results_on_page",   "type": ["null", "int"], "default": null},
+                    {"name": "search_result_index_num",         "type": ["null", "int"], "default": null}
+                  ]}],
+                  "default": null
+          }
+        ]}],
+        "default": null
+      },
+      {"name": "action_metadata", "type": ["null",
+          {"type": "record", "name": "action_metadata_type", "fields": [
+                {"name": "action_name",                   "type": ["null", "string"], "default": null},
+                {"name": "action_type",                   "type": ["null", "string"], "default": null},
+                {"name": "interaction_mode",              "type": ["null", "string"], "default": null},
+                {"name": "action_wall_timestamp",         "type": ["null", "long"], "default": null},
+                {"name": "success",                       "type": ["null", "boolean"], "default": null},
+                {"name": "action_response_time",          "type": ["null", "int"], "default": null},
+                {"name": "action_details",                "type": ["null",
+                    {"type": "record", "name": "action_details_type", "fields": [
+                        {"name": "settings",              "type": ["null",
+                           {"type": "array", "name": "settings_list_type", "items":
+                              {"type": "record", "name": "setting_type", "fields": [
+                                  {"name": "name",            "type": ["null", "string"], "default": null},
+                                  {"name": "value",           "type": ["null", "boolean"], "default": null}
+                              ]}
+                           }],
+                          "default": null
+                        }
+                     ]}],
+                   "default": null
+                },
+                {"name": "ordinals", "type": ["null",
+                    {"type": "record", "name": "ordinals_type", "fields": [
+                        {"name": "horizontal_ordinal",                "type": ["null",
+                           {"type": "record", "name": "horizontal_ordinal_type", "fields":[
+                              {"name": "ordinal_type",                  "type": ["null", "string"], "default": null},
+                              {"name": "navigation_start_ordinal",      "type": ["null", "long"], "default": null},
+                              {"name": "navigation_end_ordinal",        "type": ["null", "long"], "default": null},
+                              {"name": "view_element_position_ordinal", "type": ["null", "long"], "default": null}
+                          ]}],
+                          "default": null
+                         },
+                         {"name": "vertical_ordinal",                "type": ["null",
+                            {"type": "record", "name": "vertical_ordinal_type", "fields":[
+                               {"name": "ordinal_type",                  "type": ["null", "string"], "default": null},
+                               {"name": "navigation_start_ordinal",      "type": ["null", "long"], "default": null},
+                               {"name": "navigation_end_ordinal",        "type": ["null", "long"], "default": null},
+                               {"name": "view_element_position_ordinal", "type": ["null", "long"], "default": null}
+                            ]}],
+                            "default": null
+                         }
+
+                     ]}],
+                   "default": null
+                }
+          ]}],
+          "default": null
+       },
+      {"name": "client_error_data", "type": ["null",
+        {"type": "record", "name": "client_error_data_type", "fields": [
+          {"name": "error_objects",                 "type": ["null", {"type": "map", "values": "string"}], "default": null},
+          {"name": "error_type",                    "type": ["null", "string"], "default": null},
+          {"name": "error_info",                    "type": ["null", "string"], "default": null},
+          {"name": "attempted_state_transition",    "type": ["null", "string"], "default": null},
+          {"name": "current_state_method",          "type": ["null", "string"], "default": null},
+          {"name": "valid_transition",              "type": ["null", {"type": "array", "items":{"type": "string"}}], "default": null},
+          {"name": "timestamp",                     "type": ["null", "long"], "default": null}
+        ]}],
+        "default": null
+      },
+      {"name": "remote_call_data", "type": ["null",
+              {"type": "record", "name": "remote_call_data_type", "fields": [
+                {"name": "http_status_code",              "type": ["null", "int"], "default": null},
+                {"name": "success",                       "type": ["null", "boolean"], "default": null},
+                {"name": "unexpected_response",           "type": ["null", "boolean"], "default": null},
+                {"name": "request_timeout",               "type": ["null", "boolean"], "default": null},
+                {"name": "response_time_in_ms",           "type": ["null", "int"], "default": null},
+                {"name": "remote_host_name",              "type": ["null", "string"], "default": null},
+                {"name": "service_uri",                   "type": ["null", "string"], "default": null},
+                {"name": "services_base_uri",             "type": ["null", "string"], "default": null},
+                {"name": "http_verb",                     "type": ["null", "string"], "default": null},
+                {"name": "recoverable",                   "type": ["null", "boolean"], "default": null},
+                {"name": "retriable",                     "type": ["null", "boolean"], "default": null},
+                {"name": "remote_call_id",                "type": ["null", "int"], "default": null},
+                {"name": "query_parameters",              "type": ["null", "string"], "default": null},
+                {"name": "request_body",                  "type": ["null", "string"], "default": null},
+                {"name": "response_body",                 "type": ["null", "string"], "default": null}
+              ]}],
+              "default": null
+       },
+       {"name": "content_metadata", "type": ["null",
+               {"type": "record", "name": "content_metadata_type", "fields": [
+                 {"name": "entitled",                       "type": ["null", "boolean"], "default": null},
+                 {"name": "head_end",                       "type": ["null", "string"], "default": null},
+                 {"name": "parentally_locked",              "type": ["null", "boolean"], "default": null},
+                 {"name": "favorite",                       "type": ["null", "boolean"], "default": null},
+                 {"name": "channel_id_type",                "type": ["null", "string"], "default": null},
+                 {"name": "channel_id",                     "type": ["null", "string"], "default": null},
+                 {"name": "series_id_type",                 "type": ["null", "string"], "default": null},
+                 {"name": "series_id",                      "type": ["null", "string"], "default": null},
+                 {"name": "content_id_type",                "type": ["null", "string"], "default": null},
+                 {"name": "content_id",                     "type": ["null", "string"], "default": null},
+                 {"name": "product_id",                     "type": ["null", "string"], "default": null},
+                 {"name": "provider_id",                    "type": ["null", "string"], "default": null},
+                 {"name": "airing_time_stamp",              "type": ["null", "long"], "default": null}
+               ]}],
+               "default": null
+       },
+       {"name": "recording_data", "type": ["null",
+               {"type": "record", "name": "recording_data_type", "fields": [
+                 {"name": "recording_type",               "type": ["null", "string"], "default": null},
+                 {"name": "is_new_recording",             "type": ["null", "boolean"], "default": null},
+                 {"name": "one_time_recording",           "type": ["null",
+                   {"type": "record", "name": "one_time_recording_type", "fields": [
+                     {"name": "save_time",         "type": ["null", "string"], "default": null},
+                     {"name": "start_time",        "type": ["null", "string"], "default": null},
+                     {"name": "end_time",          "type": ["null", "string"], "default": null}
+                   ]}],
+                   "default": null
+                 },
+                 {"name": "series_recording",           "type": ["null",
+                   {"type": "record", "name": "series_recording_type", "fields": [
+                     {"name": "start_time",                "type": ["null", "string"], "default": null},
+                     {"name": "end_time",                  "type": ["null", "string"], "default": null},
+                     {"name": "save_at_most",              "type": ["null", "string"], "default": null},
+                     {"name": "record",                    "type": ["null", "string"], "default": null},
+                     {"name": "air_time_description",      "type": ["null", "string"], "default": null}
+                   ]}],
+                   "default": null
+                 },
+                 {"name": "air_time",                      "type": ["null", "long"], "default": null},
+                 {"name": "recording_id",                  "type": ["null", "string"], "default": null}
+               ]}],
+               "default": null
+      },
+      {"name": "stb_data", "type": ["null",
+              {"type": "record", "name": "stb_data_type", "fields": [
+                {"name": "stb_is_dvr",                     "type": ["null", "boolean"], "default": null},
+                {"name": "dvr_name",                       "type": ["null", "string"], "default": null},
+                {"name": "stb_device_id_type",             "type": ["null", "string"], "default": null},
+                {"name": "stb_device_id",                  "type": ["null", "string"], "default": null},
+                {"name": "old_stb_name",                   "type": ["null", "string"], "default": null},
+                {"name": "new_stb_name",                   "type": ["null", "string"], "default": null},
+                {"name": "stb_channel_tune_success",       "type": ["null", "boolean"], "default": null},
+                {"name": "stb_list", "type": ["null",
+                     {"type": "array", "name":  "stb_list_type", "items":
+                       {"type": "record", "name": "stb_type", "fields": [
+                          {"name": "is_dvr",               "type": "boolean"},
+                          {"name": "device_id_type",       "type": "string"},
+                          {"name": "device_id",            "type": "string"}
+                       ]}
+                     }],
+                  "default": null
+                }
+              ]}],
+              "default": null
+      },
+      {"name": "playback_data", "type": ["null",
+        {"type": "record", "name": "playback_data_type", "fields": [
+            {"name": "success",    "type": ["null", "boolean"], "default": null},
+            {"name": "scrub_data", "type": ["null",
+                   {"type": "record", "name": "scrub_data_type", "fields": [
+                      {"name": "scrub_type",           "type": ["null", "string"], "default": null},
+                      {"name": "scrub_speed",          "type": ["null", "int"], "default": null},
+                      {"name": "scrub_start",          "type": ["null", "int"], "default": null},
+                      {"name": "scrub_end",            "type": ["null", "int"], "default": null}
+                    ]}],
+                    "default": null
+            },
+            {"name": "player_state", "type": ["null",
+                    {"type": "record", "name": "player_state_type", "fields": [
+                      {"name": "playback_started_at_wall_timestamp",     "type": ["null", "long"], "default": null},
+                      {"name": "bookmark_content_seconds",               "type": ["null", "int"], "default": null},
+                      {"name": "uriObtained_at_wall_timestamp",          "type": ["null", "long"], "default": null},
+                      {"name": "player_type",                            "type": ["null", "string"],  "default": null},
+                      {"name": "scrubbing_enabled",                      "type": ["null", "boolean"], "default": null},
+                      {"name": "cc_enabled",                             "type": ["null", "boolean"], "default": null},
+                      {"name": "playback_requested_at_wall_timestamp",   "type": ["null", "long"], "default": null},
+                      {"name": "ff_blocked",                             "type": ["null", "boolean"], "default": null},
+                      {"name": "load_time",                              "type": ["null", "double"], "default": null},
+                      {"name": "content_seconds",                        "type": ["null", "int"], "default": null}
+                    ]}],
+                    "default": null
+            },
+            {"name": "beacon_details", "type": ["null",
+                   {"type": "record", "name": "beacon_details_type", "fields": [
+                      {"name": "total_time_since_last_beacon",           "type": ["null", "int"], "default": null},
+                      {"name": "content_seconds_since_last_beacon",      "type": ["null", "int"], "default": null}
+                    ]}],
+                   "default": null
+            },
+            {"name": "current_state", "type": ["null",
+                   {"type": "record", "name": "current_state_type", "fields": [
+                      {"name": "state",                                 "type": ["null", "string"],  "default": null},
+                      {"name": "entry_wall_timestamp",                  "type": ["null", "long"], "default": null},
+                      {"name": "entry_content_seconds",                 "type": ["null", "int"], "default": null},
+                      {"name": "bit_rate",                              "type": ["null", "int"], "default": null}
+                     ]}],
+                   "default": null
+            },
+            {"name": "previous_state", "type": ["null",
+                 {"type": "record", "name": "previous_state_type", "fields": [
+                    {"name": "state",                                   "type": ["null", "string"],  "default": null},
+                    {"name": "entry_wall_timestamp",                    "type": ["null", "long"], "default": null},
+                    {"name": "entry_content_seconds",                   "type": ["null", "int"], "default": null},
+                    {"name": "exit_wall_timestamp",                     "type": ["null", "long"], "default": null},
+                    {"name": "exit_content_seconds",                    "type": ["null", "int"], "default": null},
+                    {"name": "wall_time_in_state",                      "type": ["null", "int"], "default": null},
+                    {"name": "content_seconds_in_state",                "type": ["null", "int"], "default": null},
+                    {"name": "bit_rate",                                "type": ["null", "int"], "default": null}
+                   ]}],
+                 "default": null
+            },
+            {"name": "audio_data", "type": ["null",
+                    {"type": "record", "name": "audio_data_type", "fields": [
+                      {"name": "player_volume",                 "type": ["null", "int"], "default": null},
+                      {"name": "player_muted",                  "type": ["null", "boolean"], "default": null},
+                      {"name": "device_muted",                  "type": ["null", "boolean"], "default": null},
+                      {"name": "device_volume",                 "type": ["null", "int"], "default": null}
+                    ]}],
+                    "default": null
+            },
+            {"name": "stream_data", "type": ["null",
+                    {"type": "record", "name": "stream_data_type", "fields": [
+                      {"name": "stream_failed_at_wall_timestamp",       "type": ["null", "long"],                                "default": null},
+                      {"name": "uri_obtained_at_wall_timestamp",        "type": ["null", "long"],                                "default": null},
+                      {"name": "content_base_uri",                      "type": ["null", "string"],                              "default": null},
+                      {"name": "content_uri",                           "type": ["null", "string"],                              "default": null},
+                      {"name": "content_format",                        "type": ["null", "string"],                              "default": null},
+                      {"name": "content_protection",                    "type": ["null", "string"],                              "default": null},
+                      {"name": "blocked",                               "type": ["null", "boolean"],                             "default": null},
+                      {"name": "interaction_type",                      "type": ["null", "string"],                              "default": null},
+                      {"name": "bit_rates",                             "type": ["null", {"type": "map", "values": "double"}],   "default": null}
+                    ]}],
+                    "default": null
+            },
+            {"name": "ad_data", "type": ["null",
+                    {"type": "record", "name": "ad_data_type", "fields": [
+                      {"name": "ad_break_started_timestamp",    "type": ["null", "long"],   "default": null},
+                      {"name": "ad_break_start",                "type": ["null", "int"],    "default": null},
+                      {"name": "ad_break_length",               "type": ["null", "int"],    "default": null},
+                      {"name": "ad_started_timestamp",          "type": ["null", "long"],   "default": null},
+                      {"name": "break_number",                  "type": ["null", "int"],    "default": null},
+                      {"name": "seconds_of_ad_viewed",          "type": ["null", "double"], "default": null},
+                      {"name": "ad_id",                         "type": ["null", "string"],    "default": null},
+                      {"name": "ad_title",                      "type": ["null", "string"], "default": null},
+                      {"name": "ad_length",                     "type": ["null", "int"],    "default": null},
+                      {"name": "campaign_id",                   "type": ["null", "string"],    "default": null},
+                      {"name": "ad_provider",                   "type": ["null", "string"], "default": null},
+                      {"name": "ad_client",                     "type": ["null", "string"], "default": null},
+                      {"name": "commodity_code",                "type": ["null", "int"],    "default": null}
+                    ]}],
+                    "default": null
+            }
+
+      ]}],
+      "default": null
+      },
+      {"name": "display_data", "type": ["null",
+        {"type": "record", "name": "display_data_type", "fields": [
+          {"name": "view_mode", "type": ["null",
+             {"type": "record", "name": "view_mode_type", "fields": [
+                        {"name": "window_size",                       "type": ["null", "string"], "default": null},
+                        {"name": "full_screen_interactive",           "type": ["null", "boolean"], "default": null}
+             ]}],
+             "default": null
+          },
+          {"name": "view_name",                "type": ["null", "string"],   "default": null},
+          {"name": "view_classification",      "type": ["null", "string"],   "default": null},
+          {"name": "view_load_time",           "type": ["null", "double"],   "default": null},
+          {"name": "view_shown_at",            "type": ["null", "long"],     "default": null},
+          {"name": "client_view_id",           "type": ["null", "string"],   "default": null},
+          {"name": "view_type",                "type": ["null", "string"],   "default": null},
+          {"name": "display_type",             "type": ["null", "string"],   "default": null},
+          {"name": "element_name",             "type": ["null", "string"],   "default": null},
+          {"name": "enabled",                  "type": ["null", "boolean"],  "default": null},
+          {"name": "view_option",              "type": ["null", "string"],   "default": null},
+          {"name": "sort_option",              "type": ["null", "string"],   "default": null},
+          {"name": "shown_at_wall_timestamp",  "type": ["null", "long"],   "default": null},
+          {"name": "page_number",              "type": ["null", "int"],   "default": null},
+          {"name": "index_of_top_channel",     "type": ["null", "int"],   "default": null},
+          {"name": "window_size",              "type": ["null", "string"],   "default": null}
+        ]}],
+        "default": null
+      },
+      {"name": "content_restriction", "type": ["null",
+        {"type": "record", "name": "content_restriction_type", "fields": [
+          {"name": "time_shift_format",           "type": ["null", {"type": "array", "items":{"type": "string"}}], "default": null},
+          {"name": "time_availability",           "type": ["null", {"type": "array", "items":{"type": "string"}}], "default": null},
+          {"name": "device_availability",         "type": ["null",
+            {"type": "record", "name": "device_availability_type", "fields": [
+                {"name": "platform",                    "type": ["null", "string"], "default": null},
+                {"name": "device_identifier",           "type": ["null", "string"], "default": null}
+             ]}],
+             "default": null
+          },
+          {"name": "location_availability",       "type": ["null", {"type": "array", "items":{"type": "string"}}], "default": null},
+          {"name": "applied_filters", "type": ["null",
+             {"type": "array", "name":  "applied_filters_type", "items":
+                {"type": "record", "name": "filter_type", "fields": [
+                   {"name": "filter_text",        "type": ["null", "string"], "default": null},
+                   {"name": "type_val",           "type": ["null", "string"], "default": null},
+                   {"name": "value",              "type": ["null", "string"], "default": null},
+                   {"name": "level",              "type": ["null", "int"], "default": null},
+                   {"name": "metadata", "type": ["null",
+                      {"type": "array", "name":  "metadata_type", "items":
+                         {"type": "record", "name": "metadata_item_type", "fields": [
+                            {"name": "total_num_of_items",                     "type": ["null", "int"], "default": null},
+                            {"name": "total_num_of_items_entitled",            "type": ["null", "int"], "default": null},
+                            {"name": "total_num_of_items_parentally_locked",   "type": ["null", "int"], "default": null},
+                            {"name": "entitled",                               "type": ["null", "boolean"], "default": null},
+                            {"name": "head_end",                               "type": ["null", "string"], "default": null},
+                            {"name": "parentally_locked",                      "type": ["null", "boolean"], "default": null},
+                            {"name": "favorite",                               "type": ["null", "boolean"], "default": null},
+                            {"name": "channel_id_type",                        "type": ["null", "string"], "default": null},
+                            {"name": "channel_id",                             "type": ["null", "string"], "default": null},
+                            {"name": "series_id_type",                         "type": ["null", "string"], "default": null},
+                            {"name": "series_id",                              "type": ["null", "string"], "default": null},
+                            {"name": "content_id_type",                        "type": ["null", "string"], "default": null},
+                            {"name": "content_id",                             "type": ["null", "string"], "default": null},
+                            {"name": "product_id",                             "type": ["null", "string"], "default": null},
+                            {"name": "provider_id",                            "type": ["null", "string"], "default": null},
+                            {"name": "airing_time_stamp",                      "type": ["null", "long"], "default": null}
+                         ]}
+                      }],
+                      "default": null
+                   }
+             ]}
+            }],
+            "default": null
+          },
+          {"name": "available_filters", "type": ["null",
+             {"type": "array", "name":  "available_filters_type", "items": "filter_type"}],
+            "default": null
+          }
+        ]}],
+        "default": null
+      },
+      {"name": "user_message", "type": ["null",
+          {"type": "record", "name": "user_message_type", "fields": [
+             {"name": "message",                "type": ["null", "string"], "default": null},
+             {"name": "type",                   "type": ["null", "string"], "default": null}
+          ]}],
+          "default": null
+      }
+    ]}
+  },
+{"name": "asset", "type": ["null", 
+    {"name": "asset_type",
+        "type": "record",
+        "fields": [
+          {"name": "asset_type",       "type": "string"},
+          {"name": "program_type",     "type": ["null", "string"], "default": null},
+          {"name": "id",               "type": ["null", "string"], "default": null},
+          {"name": "title",            "type": ["null", "string"], "default": null},
+          {"name": "title_asset_id",   "type": ["null", "string"], "default": null},
+          {"name": "tms_channel_id",   "type": ["null", "string"], "default": null},
+          {"name": "channel_number",   "type": ["null", "string"], "default": null},
+          {"name": "provider",         "type": ["null", "string"], "default": null},
+          {"name": "product",          "type": ["null", "string"], "default": null},
+          {"name": "episode_number",   "type": ["null", "int"], "default": null},
+          {"name": "series_number",    "type": ["null", "int"], "default": null},
+          {"name": "media",            "type": ["null",
+              {"type": "record", "name": "media_type", "fields": [
+                {"name": "details",           "type": ["null",
+                  {"type": "record", "name": "details_type", "fields": [
+                    {"name": "actors",                "type": ["null",
+                      {"type": "array", "name": "actors_list", "items":
+                        {"name": "actor", "type": "string"}
+                      }],
+                      "default": null
+                    },
+                    {"name": "available_date",        "type": ["null", "long"],    "default": null},
+                    {"name": "closed_captioned",      "type": ["null", "boolean"], "default": null},
+                    {"name": "runtime",               "type": ["null", "string"],  "default": null},
+                    {"name": "expiration_date",       "type": ["null", "long"],    "default": null},
+                    {"name": "genres",                "type": ["null",
+                      {"type": "array", "name": "genres_list", "items":
+                        {"name": "genre", "type": "string"}
+                      }],
+                      "default": null
+                    },
+                    {"name": "original_air_date",     "type": ["null", "long"],    "default": null},
+                    {"name": "original_network_name", "type": ["null", "string"],  "default": null},
+                    {"name": "rating",                "type": ["null", "string"],  "default": null},
+                    {"name": "short_description",     "type": ["null", "string"],  "default": null},
+                    {"name": "year",                  "type": ["null", "string"],  "default": null}
+                  ]}],
+                  "default": null
+                },
+                {"name": "network",           "type": ["null",
+                  {"type": "record", "name": "network_type", "fields": [
+                    {"name": "callsign",         "type": ["null", "string"], "default": null},
+                    {"name": "name",             "type": ["null", "string"], "default": null},
+                    {"name": "product_provider", "type": ["null", "string"], "default": null}
+                  ]}],
+                  "default": null
+                },
+                {"name": "episode_title",     "type": ["null", "string"],  "default": null},
+                {"name": "hd",                "type": ["null", "boolean"], "default": null}
+              ]}],
+              "default": null
+          },
+          {"name": "status", "type": ["null", "string"], "default": null}
+        ]
+    }
+  ], "default": null},
+  {"name": "upcoming_content", "type": ["null",
+      {"type": "record", "name": "upcoming_content_type", "fields": [
+        {"name": "future_assets", "type": ["null", {"type": "array", "items": "asset_type"}], "default": null}
+      ]}],
+      "default": null
+  },
+  {"name": "sia_demographic_info", "type": ["null",
+      {"type": "record", "name": "sia_demographic_info_type", "fields": [
+        {"name": "id",                  "type": ["null", {"type": "map", "values": "string"}], "default": null},
+        {"name": "qualifiers",          "type": ["null", {"type": "map", "values": "string"}], "default": null},
+        {"name": "status",              "type": ["null", "string"],                            "default": null}
+      ]}],
+      "default": null
+  },
+  {"name": "cst_user_account", "type": ["null",
+      {"type": "record", "name": "cst_user_account_type", "fields": [
+        {"name": "region", "type": ["null", "string"], "default": null},
+        {"name": "market", "type": ["null", "string"], "default": null},
+        {"name": "hsd_info", "type": ["null",
+          {"type": "record", "name": "hsd_info_type", "fields": [
+            {"name": "docsis_version",    "type": ["null", "string"], "default": null},
+            {"name": "modem_type",        "type": ["null", "string"], "default": null},
+            {"name": "hsd_package",       "type": ["null", "string"], "default": null},
+            {"name": "downstream_rate",   "type": ["null", "string"], "default": null}
+          ]}],
+          "default": null
+        },
+        {"name": "account", "type": ["null",
+          {"type": "record", "name": "account_type", "fields": [
+            {"name": "type",    "type": ["null", "string"], "default": null},
+            {"name": "address", "type": ["null",
+              {"type": "record", "name": "address_type", "fields": [
+                {"name": "address_type", "type": ["null", "string"], "default": null},
+                {"name": "city",         "type": ["null", "string"], "default": null},
+                {"name": "state",        "type": ["null", "string"], "default": null},
+                {"name": "zip_code",     "type": ["null", "string"], "default": null}
+              ]}],
+              "default": null
+            },
+            {"name": "soa_division",        "type": ["null", "string"],          "default": null},
+            {"name": "billing_id",          "type": ["null", "string"],          "default": null},
+            {"name": "division_id",         "type": ["null", "string"],          "default": null},
+            {"name": "guid",                "type": ["null", "string"],          "default": null},
+            {"name": "has_multiple_admins", "type": ["null", "boolean"],         "default": null},
+            {"name": "account_number_encrypted",    "type": ["null", "string"],  "default": null},
+            {"name": "account_number_md5_salt_hashed",    "type": ["null", "string"],  "default": null},
+            {"name": "status",              "type": ["null", "string"],          "default": null}
+          ]}], "default": null
+        },
+        {"name": "user", "type": ["null",
+          {"type": "record", "name": "user_type", "fields": [
+            {"name": "guid",                 "type": ["null", "string"], "default": null},
+            {"name": "role",                 "type": ["null", "string"], "default": null},
+            {"name": "status",               "type": ["null", "string"], "default": null},
+            {"name": "tos_version_accepted", "type": ["null", "string"], "default": null}
+          ]}],
+          "default": null
+        },
+        {"name": "user_whitelist", "type": ["null",
+          {"type": "record", "name": "user_whitelist_type", "fields": [
+            {"name": "canSeeAllStreams",     "type": ["null", "boolean"], "default": null},
+            {"name": "allowUnlimitedIps",    "type": ["null", "boolean"], "default": null},
+            {"name": "oohBehavior",          "type": ["null", "boolean"], "default": null},
+            {"name": "comment",              "type": ["null", "string"], "default": null},
+            {"name": "status",               "type": ["null", "string"], "default": null}
+          ]}],
+          "default": null
+        },
+        {"name": "status", "type": ["null", "string"], "default": null},
+        {"name": "audience_measurement_customer_guid_encrypted", "type": ["null", "string"], "default": null}
+      ]}],
+      "default": null
+    },
+  {"name": "session", "type": ["null",
+    {"type": "record", "name": "session_type", "fields": [
+      {"name": "session_id",                         "type": "string"},
+      {"name": "customer_guid_md5_salt_hashed",      "type": ["null", "string"], "default": null},
+      {"name": "account_guid_md5_salt_hashed",       "type": ["null", "string"], "default": null},
+      {"name": "user_agent",                         "type": ["null", "string"], "default": null},
+      {"name": "user_ip_address_md5_salt_hashed",    "type": ["null", "string"], "default": null},
+      {"name": "previous_session_id",                "type": ["null", "string"], "default": null},
+      {"name": "app_startup",                        "type": ["null", "string"], "default": null},
+      {"name": "utc_offset",                         "type": ["null", "int"],    "default": null},
+      {"name": "target_data_consumers",              "type": ["null", "string"], "default": null},
+      {"name": "network_connection",                 "type": ["null", "string"], "default": null},
+      {"name": "cell_network_type",                  "type": ["null", "string"], "default": null},
+      {"name": "client_details",                     "type": ["null",
+        {"type": "record", "name": "client_details_type", "fields": [
+          {"name": "browser",                      "type": ["null", "string"],  "default": null},
+          {"name": "browser_version",              "type": ["null", "string"],  "default": null},
+          {"name": "application_name",             "type": ["null", "string"],  "default": null},
+          {"name": "application_version",          "type": ["null", "string"],  "default": null},
+          {"name": "api_version",                  "type": ["null", "string"],  "default": null},
+          {"name": "form_factor",                  "type": ["null", "string"],  "default": null},
+          {"name": "device_model",                 "type": ["null", "string"],  "default": null},
+          {"name": "device_os",                    "type": ["null", "string"],  "default": null},
+          {"name": "device_id",                    "type": ["null", "string"],  "default": null},
+          {"name": "triggered_by",                 "type": ["null",
+            {"type": "record", "name": "triggered_by_type", "fields": [
+                  {"name": "initiator",    "type": "string"},
+                  {"name": "link",         "type": ["null", "string"], "default": null},
+                  {"name": "referrer_loc","type": ["null", "string"], "default": null}
+            ]}],
+            "default": null
+          }
+        ]}],
+        "default": null
+      },
+      {"name": "log_level",                 "type": ["null", "int"],    "default": null},
+      {"name": "headend_id",                "type": ["null", "string"], "default": null},
+      {"name": "pi_session_id",             "type": ["null", "string"], "default": null},
+      {"name": "pi_api_key",                "type": ["null", "string"], "default": null},
+      {"name": "pi_request_id",             "type": ["null", "string"], "default": null},
+      {"name": "authentication_token",      "type": ["null", "string"], "default": null},
+      {"name": "token_status",              "type": ["null", "string"], "default": null},
+      {"name": "view_id",                   "type": ["null", "string"], "default": null},
+      {"name": "device_type",               "type": ["null", "string"], "default": null},
+      {"name": "capabilities_list", "type": ["null",
+         {"type": "record", "name": "capabilities_list_type", "fields": [
+            {"name": "live_tv_all",                  "type": ["null", "string"], "default": null},
+            {"name": "live_tv_browse",               "type": ["null", "string"], "default": null},
+            {"name": "live_tv_stream",               "type": ["null", "string"], "default": null},
+            {"name": "live_tv_flick_to_tv",          "type": ["null", "string"], "default": null},
+            {"name": "vod_all",                      "type": ["null", "string"], "default": null},
+            {"name": "vod_browse",                   "type": ["null", "string"], "default": null},
+            {"name": "vod_stream",                   "type": ["null", "string"], "default": null},
+            {"name": "vod_flick_to_tv",              "type": ["null", "string"], "default": null},
+            {"name": "vod_sync_and_go",              "type": ["null", "string"], "default": null},
+            {"name": "dvr_all",                      "type": ["null", "string"], "default": null},
+            {"name": "dvr_scheduled_browse",         "type": ["null", "string"], "default": null},
+            {"name": "dvr_scheduled_update",         "type": ["null", "string"], "default": null},
+            {"name": "dvr_recorded_browse",          "type": ["null", "string"], "default": null},
+            {"name": "dvr_recorded_stream",          "type": ["null", "string"], "default": null},
+            {"name": "dvr_recorded_flick_to_tv",     "type": ["null", "string"], "default": null},
+            {"name": "dvr_recorded_sync_and_go",     "type": ["null", "string"], "default": null},
+            {"name": "drm",                          "type": ["null", "string"], "default": null},
+            {"name": "drm_playback",                 "type": ["null", "string"], "default": null}
+          ]}],
+              "default": null
+       },
+       {"name": "path", "type": ["null",
+          {"type": "array", "name": "path_type", "items": "step"}],
+       "default": null
+       }
+    ]}],
+    "default": null
+  },
+  {"name": "geo_ip_data", "type": ["null",
+      {"type": "record", "name": "geo_ip_data_type", "fields": [
+        {"name": "ip",              "type": "string"},
+        {"name": "country_code",    "type": ["null", "string"], "default": null},
+        {"name": "country_name",    "type": ["null", "string"], "default": null},
+        {"name": "region",          "type": ["null", "string"], "default": null},
+        {"name": "region_name",     "type": ["null", "string"], "default": null},
+        {"name": "city",            "type": ["null", "string"], "default": null},
+        {"name": "postal_code",     "type": ["null", "string"], "default": null},
+        {"name": "latitude",        "type": ["null", "double"], "default": null},
+        {"name": "longitude",       "type": ["null", "double"], "default": null},
+        {"name": "metro_code",      "type": ["null", "int"],    "default": null},
+        {"name": "area_code",       "type": ["null", "int"],    "default": null},
+        {"name": "timezone",        "type": ["null", "string"], "default": null},
+        {"name": "status",          "type": ["null", "string"], "default": null}
+        ]}],
+    "default": null
+  },
+  {"name": "isp_data", "type": ["null",
+      {"type": "record", "name": "isp_data_type", "fields": [
+        {"name": "locationId",      "type": ["null", "int"],     "default": null},
+        {"name": "organisation",    "type": ["null", "string"],  "default": null},
+        {"name": "isp",             "type": ["null", "string"],  "default": null},
+        {"name": "out_of_home",     "type": ["null", "boolean"], "default": null},
+        {"name": "status",          "type": ["null", "string"],  "default": null}
+        ]}],
+    "default": null
+  },
+  {"name": "legacy_breadcrumb",  "type": ["null", "string"], "default": null},
+  {"name": "timestamp_received", "type": ["null", "long"],   "default": null},
+  {"name": "timestamp_created",  "type": ["null", "long"],   "default": null}
+]}
+

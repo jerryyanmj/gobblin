@@ -134,6 +134,7 @@ LIBJARS=(
   $FWDIR_LIB/gobblin-core-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/gobblin-api-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/gobblin-utility-$GOBBLIN_VERSION.jar
+  $FWDIR_LIB/gobblin-example-$GOBBLIN_VERSION.jar
   $FWDIR_LIB/guava-15.0.jar
   $FWDIR_LIB/avro-1.7.7.jar
   $FWDIR_LIB/avro-mapred-1.7.7-hadoop2.jar
@@ -179,6 +180,7 @@ $HADOOP_BIN_DIR/hadoop jar \
         gobblin.runtime.mapreduce.CliMRJobLauncher \
         -D mapreduce.user.classpath.first=true \
         -D mapreduce.job.user.classpath.first=true \
+        -D mapreduce.task.classpath.user.precedence=true \
         $JT_COMMAND \
         $FS_COMMAND \
         -libjars $LIBJARS \
