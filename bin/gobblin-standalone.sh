@@ -1,5 +1,22 @@
 #!/bin/bash
 
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 function print_usage(){
   echo "gobblin-standalone.sh <start | status | restart | stop> [OPTION]"
   echo "Where OPTION can be:"
@@ -181,7 +198,7 @@ start() {
   COMMAND+="-cp $CLASSPATH "
   COMMAND+="-Dorg.quartz.properties=$FWDIR_CONF/quartz.properties "
   COMMAND+="$GOBBLIN_JVM_FLAGS "
-  COMMAND+="gobblin.scheduler.SchedulerDaemon $DEFAULT_CONFIG_FILE $GOBBLIN_CUSTOM_CONFIG_FILE"
+  COMMAND+="org.apache.gobblin.scheduler.SchedulerDaemon $DEFAULT_CONFIG_FILE $GOBBLIN_CUSTOM_CONFIG_FILE"
   echo "Running command:"
   echo "$COMMAND"
   nohup $COMMAND & echo $! > $PID
@@ -196,6 +213,8 @@ stop() {
       if kill -0 $PID_VALUE > /dev/null 2>&1; then
         echo "Gobblin standalone daemon did not stop gracefully, killing with kill -9"
         kill -9 $PID_VALUE
+        echo "Cleaning up lock directory: $GOBBLIN_WORK_DIR/locks"
+        rm -r $GOBBLIN_WORK_DIR/locks
       fi
     else
       echo "Process $PID_VALUE is not running"

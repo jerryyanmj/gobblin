@@ -513,7 +513,7 @@ The name of the host to connect to.
 ###### Default Value
 None
 ###### Required
-Required for SftpExtractor, MySQLExtractor, and SQLServerExtractor.
+Required for SftpExtractor, MySQLExtractor, OracleExtractor, SQLServerExtractor and TeradataExtractor.
 #### source.conn.rest.url 
 ###### Description
 URL to connect to for REST requests. This parameter is only used for the Salesforce source.
@@ -541,7 +541,14 @@ The value of the port to connect to.
 ###### Default Value
 None
 ###### Required
-Required for SftpExtractor, MySQLExtractor, SqlServerExtractor.
+Required for SftpExtractor, MySQLExtractor, OracleExtractor, SQLServerExtractor and TeradataExtractor.
+#### source.conn.sid
+###### Description
+The Oracle System ID (SID) that identifies the database to connect to.
+###### Default Value
+None
+###### Required
+Required for OracleExtractor.
 #### extract.table.name 
 ###### Description
 Table name in Hadoop which is different table name in source.
@@ -961,7 +968,7 @@ No
 # Writer Properties <a name="Writer-Properties"></a>
 #### writer.destination.type 
 ###### Description
-Writer destination type; currently only writing to HDFS is supported.
+Writer destination type. Can be HDFS, KAFKA, MYSQL or TERADATA
 ###### Default Value
 HDFS 
 ###### Required
@@ -1050,6 +1057,41 @@ No
 This is used to control the writer creation. If the value is set to true, writer is created before records are read. This means an empty file will be created even if no records were read.
 ###### Default Value
 False 
+###### Required
+No
+#### writer.parquet.page.size
+###### Description
+The page size threshold
+###### Default Value
+1048576
+###### Required
+No
+#### writer.parquet.dictionary.page.size
+###### Description
+The block size threshold.
+###### Default Value
+134217728
+###### Required
+No
+#### writer.parquet.dictionary
+###### Description
+To turn dictionary encoding on.
+###### Default Value
+true
+###### Required
+No
+#### writer.parquet.validate
+###### Description
+To turn on validation using the schema.
+###### Default Value
+false
+###### Required
+No
+#### writer.parquet.version
+###### Description
+Version of parquet writer to use. Available versions are v1 and v2.
+###### Default Value
+v1
 ###### Required
 No
 # Data Publisher Properties <a name="Data-Publisher-Properties"></a>
@@ -1152,8 +1194,8 @@ No
 # JDBC Writer properties <a name="JdbcWriter-Properties"></a>
 Writer(and publisher) that writes to JDBC database. Please configure below two properties to use JDBC writer & publisher.
 
-*  writer.builder.class=gobblin.writer.JdbcWriterBuilder
-*  data.publisher.type=gobblin.publisher.JdbcPublisher
+*  writer.builder.class=org.apache.gobblin.writer.JdbcWriterBuilder
+*  data.publisher.type=org.apache.gobblin.publisher.JdbcPublisher
 
 #### jdbc.publisher.database_name
 ###### Description
@@ -1234,7 +1276,7 @@ Batch size for Insert operation
 No
 #### writer.jdbc.insert_max_param_size
 ###### Description
-Maximum number of parameters for JDBC insert operation.
+Maximum number of parameters for JDBC insert operation (for MySQL Writer).
 ###### Default Value
 100,000 (MySQL limitation)
 ###### Required
