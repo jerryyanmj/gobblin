@@ -33,26 +33,31 @@ public class TimeBasedJsonWriterPartitioner extends TimeBasedWriterPartitioner<J
     @Override
     public long getRecordTimestamp(JsonElement record) {
 
-        JsonElement tsElem = record.getAsJsonObject().get(partitionKey);
+        try {
 
-        if (StringUtils.isNumeric(tsElem.getAsString()))
-            return tsElem.getAsLong();
+            JsonElement tsElem = record.getAsJsonObject().get(partitionKey);
 
-        if (!tsElem.isJsonNull()) {
-            SimpleDateFormat sdf = new SimpleDateFormat(partitionKeyDateFormatStr);
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Calendar c = Calendar.getInstance();
+            if (StringUtils.isNumeric(tsElem.getAsString()))
+                return tsElem.getAsLong();
 
-            try {
-                Date d = sdf.parse(tsElem.getAsString());
-                c.setTime(d);
-                c.setTimeZone(TimeZone.getTimeZone("UTC"));
-                return c.getTimeInMillis();
-            } catch (ParseException ex) {
-                return Calendar.getInstance().getTimeInMillis();
+            if (!tsElem.isJsonNull()) {
+                SimpleDateFormat sdf = new SimpleDateFormat(partitionKeyDateFormatStr);
+                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Calendar c = Calendar.getInstance();
+
+                try {
+                    Date d = sdf.parse(tsElem.getAsString());
+                    c.setTime(d);
+                    c.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    return c.getTimeInMillis();
+                } catch (ParseException ex) {
+                    return Calendar.getInstance().getTimeInMillis();
+                }
             }
-        }
 
+        } catch (RuntimeException ex) {
+            return Calendar.getInstance().getTimeInMillis();
+        }
 
         return Calendar.getInstance().getTimeInMillis();
     }
