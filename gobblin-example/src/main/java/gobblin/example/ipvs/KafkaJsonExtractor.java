@@ -1,13 +1,16 @@
 package gobblin.example.ipvs;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import gobblin.configuration.WorkUnitState;
 import gobblin.source.extractor.extract.kafka.KafkaExtractor;
 import kafka.message.MessageAndOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.collection.immutable.Stream;
 
 import java.io.*;
+import java.util.Arrays;
 
 /**
  * Created by JYan on 4/24/17.
@@ -37,10 +40,13 @@ public class KafkaJsonExtractor extends KafkaExtractor<String, JsonElement> {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-        JsonElement element = GSON.fromJson(reader, JsonElement.class);
+        try {
+            JsonElement element = GSON.fromJson(reader, JsonElement.class);
+            return element;
+        } catch (Exception ex ) {
+            logger.warn("Payload cannot converted to JSON object. {}", new String(payload));
+        }
 
-        logger.debug(element.toString());
-
-        return element;
+        return new JsonObject();
     }
 }
